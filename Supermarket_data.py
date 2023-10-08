@@ -1,33 +1,92 @@
 import csv
 
 def append_file1_info(filename, itemcode_dict):
+    with open(filename, encoding='utf-8') as file_in:
+        file_in.readline()
+        reader = csv.reader(file_in)
+        for data in reader:
+            product_code = data[0]
+            product_name = data[1]
+            category_name = decipher_category_name(data[3])
+
+            itemcode_dict[product_code] = [product_name,category_name]
+
+            
+
+def decipher_category_name(value):
+    #for some reason i had troubles with the whole string constantly spitting variations of random characters between letters in "Flower/Leaf Vegetables"
+    #so i instead did index 0 to check if it was F since "Flower/Leaf Vegetables" is the only cat that starts with F
+    if value[0] == "F": 
+        value = "Flower/Leaf Vegetables"
+    return value
+
+
+def append_file2_info(filename, itemcode_dict):
+    with open(filename, encoding='utf-8') as file_in:
+        file_in.readline()
+        reader = csv.reader(file_in)
+        for data in reader:
+            product_code = data[0]
+            loss_rate = add_percentage(data[2])
+            itemcode_dict[product_code].append(loss_rate)
+
+
+def add_percentage(value):
+    value = "%" + value
+    return value
+
+def append_file3_info(filename, itemcode_dict): 
+    wholesale_dict = {}
     with open(filename) as file_in:
         file_in.readline()
         reader = csv.reader(file_in)
         for data in reader:
-            item_code = data[0]
-            item_name = data[1]
-            category_name = decipher_category_name(data[3])
-            print(category_name)
-            input()
-            
+            product_code = data[1]
+            wholesale_price = data[2]
 
-def decipher_category_name(value):
-    if value == "Flower/LeafÂ Vegetables":
-        value = "Flower/Leaf Vegetables"
-    return value
+            if product_code not in wholesale_dict:
+                wholesale_dict[product_code] = [wholesale_price]
+            else:
+                wholesale_dict[product_code].append(wholesale_price)
+    for code in wholesale_dict:
+        itemcode_dict[code].append(wholesale_dict[code])
 
-def append_file2_info(filename, itemcode_dict):
-    pass
-def append_file3_info(filename, itemcode_dict):
-    pass
 def append_file4_info(filename, itemcode_dict):
-    pass
+    quantity_sold_dict = {}
+    selling_price_dict = {}
+    
+    with open(filename) as file_in:
+        file_in.readline()
+        reader = csv.reader(file_in)
+        for data in reader:
+            product_code = data[2]
+            quantity_sold = data[3]
+            selling_price = data[4]
+
+            if product_code not in quantity_sold_dict:
+                quantity_sold_dict[product_code] = [quantity_sold]
+            else:
+                quantity_sold_dict[product_code].append(quantity_sold)
 
 
+            if product_code not in selling_price_dict:
+                selling_price_dict[product_code] = [selling_price]
+            else:
+                selling_price_dict[product_code].append(selling_price)
+                
+    for code in quantity_sold_dict:
+        itemcode_dict[code].append(quantity_sold_dict[code])
+    for code in selling_price_dict:
+        itemcode_dict[code].append(selling_price_dict[code])
+
+
+    
 def main():
     itemcode_dict = {}
     append_file1_info("annex1.csv", itemcode_dict)
-
+    append_file2_info("annex2.csv", itemcode_dict)
+    append_file3_info("annex3.csv", itemcode_dict)
+    append_file4_info("annex4.csv", itemcode_dict)
+    print(itemcode_dict)
 
 main()
