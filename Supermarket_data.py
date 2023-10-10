@@ -80,13 +80,38 @@ def append_file4_info(filename, itemcode_dict):
         itemcode_dict[code].append(selling_price_dict[code])
 
 
-    
+def create_data_structure(itemcode_dict):
+    Transaction_log = {}
+    for data in itemcode_dict:
+        data_values = len(itemcode_dict[data])
+        print(data_values)
+        print(input)
+
+        itemname = itemcode_dict[data][0]
+        category_name = itemcode_dict[data][1]
+        loss_rate = itemcode_dict[data][2]
+
+        if data_values >=3:
+          wholesale_price = itemcode_dict[data][3]
+          if data_values >=4:
+                quantity_sold = itemcode_dict[data][4]
+                if data_values == 5:
+                    selling_price = itemcode_dict[data][5]
+        else:
+            wholesale_price = ""
+            quantity_sold = ""
+            selling_price = ""
+
+        if not category_name in Transaction_log:
+            Transaction_log[category_name] = {}
+        Transaction_log[category_name][itemname] = {"wholesale_price":wholesale_price \
+       ,"loss_rate":loss_rate, "selling_price":selling_price, "quantity_sold":quantity_sold}        
+
 def main():
     itemcode_dict = {}
     append_file1_info("annex1.csv", itemcode_dict)
     append_file2_info("annex2.csv", itemcode_dict)
     append_file3_info("annex3.csv", itemcode_dict)
     append_file4_info("annex4.csv", itemcode_dict)
-    print(itemcode_dict)
-
+    create_data_structure(itemcode_dict)
 main()
