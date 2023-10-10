@@ -83,29 +83,59 @@ def append_file4_info(filename, itemcode_dict):
 def create_data_structure(itemcode_dict):
     Transaction_log = {}
     for data in itemcode_dict:
-        data_values = len(itemcode_dict[data])
-        print(data_values)
-        print(input)
+        data_values = len(itemcode_dict[data]) -1
 
         itemname = itemcode_dict[data][0]
         category_name = itemcode_dict[data][1]
         loss_rate = itemcode_dict[data][2]
 
         if data_values >=3:
-          wholesale_price = itemcode_dict[data][3]
-          if data_values >=4:
-                quantity_sold = itemcode_dict[data][4]
-                if data_values == 5:
-                    selling_price = itemcode_dict[data][5]
+            wholesale_price = itemcode_dict[data][3]
         else:
             wholesale_price = ""
+        if data_values >=4:
+            quantity_sold = itemcode_dict[data][4]
+        else:
             quantity_sold = ""
+        if data_values == 5:
+            selling_price = itemcode_dict[data][5]
+        else:
             selling_price = ""
 
         if not category_name in Transaction_log:
             Transaction_log[category_name] = {}
         Transaction_log[category_name][itemname] = {"wholesale_price":wholesale_price \
-       ,"loss_rate":loss_rate, "selling_price":selling_price, "quantity_sold":quantity_sold}        
+       ,"loss_rate":loss_rate, "selling_price":selling_price, "quantity_sold":quantity_sold}
+
+    return Transaction_log
+
+def write_data_structure(Transaction_log):
+    with open("transaction_log.txt","w") as file_out:
+        
+        for category in Transaction_log:
+            category_print = "Category: "+ category + "\n\n"
+            file_out.write(category_print)
+            
+            for itemname in Transaction_log[category]:
+                itemname_print = "\t" + itemname + "\n"
+                file_out.write(itemname_print)
+
+                for datakeys in Transaction_log[category][itemname]:
+                    values =  Transaction_log[category][itemname][datakeys]
+                    data_num = ""
+                    for items in values:
+                        if not values == "loss_rate":
+                            data_num += items + ", "
+                        else:
+                            data_num = Transaction_log[category][itemname][datakeys][loss_rate]
+
+                    print_data = "\t\t" + datakeys + ": " + data_num + "\n"
+                    file_out.write(print_data)
+
+                    
+            
+    
+    
 
 def main():
     itemcode_dict = {}
@@ -113,5 +143,9 @@ def main():
     append_file2_info("annex2.csv", itemcode_dict)
     append_file3_info("annex3.csv", itemcode_dict)
     append_file4_info("annex4.csv", itemcode_dict)
-    create_data_structure(itemcode_dict)
+
+    Transaction_log = create_data_structure(itemcode_dict)
+
+    write_data_structure(Transaction_log)
+
 main()
