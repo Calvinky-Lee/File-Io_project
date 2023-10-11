@@ -95,6 +95,7 @@ def create_data_structure(itemcode_dict):
             wholesale_price = ""
         if data_values >=4:
             quantity_sold = itemcode_dict[data][4]
+
         else:
             quantity_sold = ""
         if data_values == 5:
@@ -122,17 +123,38 @@ def write_data_structure(Transaction_log):
 
                 for datakeys in Transaction_log[category][itemname]:
                     values =  Transaction_log[category][itemname][datakeys]
-                    data_num = ""
-                    for items in values:
-                        if not values == "loss_rate":
-                            data_num += items + ", "
-                        else:
-                            data_num = Transaction_log[category][itemname][datakeys][loss_rate]
-
-                    print_data = "\t\t" + datakeys + ": " + data_num + "\n"
-                    file_out.write(print_data)
-
                     
+                    if datakeys == "loss_rate": 
+                        file_out.write("\t\tloss_rate: " + values + "\n")
+
+                    else:
+                        file_out.write("\t\t" + datakeys + ": "  "\n")
+                        format_data_numbers(values, file_out)
+                        
+
+
+def format_data_numbers(values, file_out):
+    data_list = []
+    for i in range(0,len(values)):
+        data_value = values[i]
+        data_list.append(data_value)
+        
+        if len(data_list) == 10:
+            data_string = ""
+            for value in data_list:
+                data_string += value + ", "
+            file_out.write("\t\t\t" + data_string + "\n")
+            data_list = []
+            
+        elif i == len(values)-1:
+            data_string = ""
+            for value in data_list:
+                data_string += value + ", "
+
+
+            file_out.write("\t\t\t" + data_string + "\n")
+
+
             
     
     
