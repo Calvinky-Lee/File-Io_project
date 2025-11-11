@@ -12,7 +12,7 @@ def append_file1_info(filename, itemcode_dict):
             itemcode_dict[product_code] = [product_name,category_name]
 
             
-print("hello World!2")
+print("hello World!3")
 def decipher_category_name(value):
     #for some reason i had troubles with the whole string constantly spitting variations of random characters between letters in "Flower/Leaf Vegetables"
     #so i instead did index 0 to check if it was F since "Flower/Leaf Vegetables" is the only cat that starts with F
@@ -171,5 +171,6 @@ def main():
     write_data_structure(Transaction_log)
 
 main()
+
 
 
